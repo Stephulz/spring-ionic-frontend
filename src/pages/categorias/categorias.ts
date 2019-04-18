@@ -27,9 +27,7 @@ export class CategoriasPage {
         console.log("this.categoriaService.findAll() ", res);
         this.items = res;
       },
-        error => {
-          console.log("ERROR: ", error);
-        });
+        error => {});
     console.log('ionViewDidLoad CategoriasPage');
   }
 
