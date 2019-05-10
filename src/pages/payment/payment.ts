@@ -27,15 +27,17 @@ export class PaymentPage {
 
     this.formGroup = this.formBuilder.group({
       numeroDeParcelas: [1, Validators.required],
-     "@type": ["pagamentoComCartao", Validators.required]
+      "@type": ["pagamentoComCartao", Validators.required]
     });
 
     console.log(this.formGroup);
 
   }
-  
+
   nextPage() {
     console.log(this.pedido)
+    this.pedido.pagamento = this.formGroup.value;
+    this.navCtrl.setRoot('OrderConfirmationPage', { pedido: this.pedido });
   }
 
   ionViewDidLoad() {
