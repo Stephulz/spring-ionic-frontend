@@ -2,7 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { API_CONFIG } from "../../config/api.config";
 import { PedidoDTO } from "../../models/pedido.dto";
-import { Header } from "ionic-angular/umd";
 
 @Injectable()
 export class PedidoService {
