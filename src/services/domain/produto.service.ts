@@ -7,25 +7,25 @@ import { ProdutoDTO } from "../../models/produto.dto";
 @Injectable()
 export class ProdutoService {
 
-    constructor(public http: HttpClient){
+    constructor(public http: HttpClient) {
     }
 
-    findById(produto_id : string) {
+    findById(produto_id: string) {
         return this.http.get<ProdutoDTO>(`${API_CONFIG.baseUrl}/produtos/${produto_id}`);
     }
 
-    findByCategoria(categorira_id : string ) {
-        return this.http.get(`${API_CONFIG.baseUrl}/produtos/?categorias=${categorira_id}`)
+    findByCategoria(categorira_id: string, page: number = 0, linesPerPage: number = 24) {
+        return this.http.get(`${API_CONFIG.baseUrl}/produtos/?categorias=${categorira_id}&page=${page}&linesPerPage=${linesPerPage}`);
     }
 
-    getSmallImageFromBucket(id : string) : Observable<any> {
+    getSmallImageFromBucket(id: string): Observable<any> {
         let url = `${API_CONFIG.bucketBaseUrl}/prod${id}-small.jpg`
-        return this.http.get(url, {responseType : 'blob'});
+        return this.http.get(url, { responseType: 'blob' });
     }
 
-    getImageFromBucket(id : string) : Observable<any> {
+    getImageFromBucket(id: string): Observable<any> {
         let url = `${API_CONFIG.bucketBaseUrl}/prod${id}.jpg`
-        return this.http.get(url, {responseType : 'blob'});
+        return this.http.get(url, { responseType: 'blob' });
     }
 
 }
