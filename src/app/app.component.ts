@@ -25,7 +25,7 @@ export class MyApp {
     this.pages = [
       { title: 'Profile', component: 'ProfilePage' },
       { title: 'Categorias', component: 'CategoriasPage' },
-      { title: 'Carrinho', component: 'CartPage'},
+      { title: 'Carrinho', component: 'CartPage' },
       { title: 'Logout', component: '' },
     ];
 
@@ -44,12 +44,12 @@ export class MyApp {
 
     switch (page.title) {
       case 'Logout':
-      this.auth.logout();
-      this.nav.setRoot('HomePage');
-      break;
+        this.auth.logout();
+        this.nav.setRoot('HomePage');
+        break;
 
       default:
-      this.nav.setRoot(page.component);
-    }    
+        this.nav.setRoot(page.component);
+    }
   }
 }
