@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { StorageService } from '../../services/storage.service';
 import { ClienteDTO } from '../../models/cliente.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
@@ -23,7 +23,8 @@ export class ProfilePage {
     public navParams: NavParams,
     public storage: StorageService,
     public clienteService: ClienteService,
-    private camera: Camera
+    private camera: Camera,
+    public loadingCtrl: LoadingController
   ) {
   }
 
@@ -34,6 +35,7 @@ export class ProfilePage {
 
   loadData() {
     let localUser = this.storage.getLocalUser();
+    console.log("LOCAL USER: "+localUser.token + " LOCAL EMAIL: "+localUser.email);
     if (localUser && localUser.email) {
       this.clienteService.findByEmail(localUser.email)
         .subscribe(res => {
@@ -73,23 +75,33 @@ export class ProfilePage {
       this.picture = 'data:image/png;base64,' + imageData;
       this.cameraOn = false;
     }, (err) => {
-
+      
     });
   }
 
   sendPicture() {
+    let loader = this.presentLoading();
     this.clienteService.uploadPicture(this.picture)
       .subscribe(res => {
         this.picture = null;
         this.loadData();
+        loader.dismiss();        
       },
         error => {
-
+          loader.dismiss();  
         });
   }
 
   cancel() {
     this.picture = null;
+  }
+
+  presentLoading() {
+    let loader = this.loadingCtrl.create({
+      content: "Carregando..."
+    });
+    loader.present();
+    return loader;
   }
 
 }

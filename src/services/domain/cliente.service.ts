@@ -47,7 +47,7 @@ export class ClienteService {
         let formData: FormData = new FormData();
         formData.set('file', pictureBlob, 'file.png');
         return this.http.post(
-            `${API_CONFIG.baseUrl}/picture`,
+            `${API_CONFIG.baseUrl}/clientes/picture`,
             formData,
             {
                 observe: 'response',

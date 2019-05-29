@@ -92,7 +92,7 @@ export class ProdutosPage {
     this.loadDataRefresher();
     setTimeout(() => {
       refresher.complete();
-    }, 1000);
+    }, 2000);
   }
 
   doInfinite(infiniteScroll) {
@@ -100,7 +100,7 @@ export class ProdutosPage {
     this.loadDataRefresher();
     setTimeout(() => {
       infiniteScroll.complete();
-    }, 1000);
+    }, 2000);
   }
 
 }
