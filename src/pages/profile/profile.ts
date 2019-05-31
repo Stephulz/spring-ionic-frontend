@@ -34,6 +34,7 @@ export class ProfilePage {
   }
 
   loadData() {
+    let loader = this.presentLoading();
     let localUser = this.storage.getLocalUser();
     console.log("LOCAL USER: "+localUser.token + " LOCAL EMAIL: "+localUser.email);
     if (localUser && localUser.email) {
@@ -41,9 +42,11 @@ export class ProfilePage {
         .subscribe(res => {
           this.cliente = res as ClienteDTO;
           this.getImageIfExists();
+          loader.dismiss();
         },
           error => {
             if (error.status == 403) {
+              loader.dismiss();
               this.navCtrl.setRoot('HomePage');
             }
           });
@@ -66,6 +69,25 @@ export class ProfilePage {
 
     const options: CameraOptions = {
       quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+
+    this.camera.getPicture(options).then((imageData) => {
+      this.picture = 'data:image/png;base64,' + imageData;
+      this.cameraOn = false;
+    }, (err) => {
+      
+    });
+  }
+
+  getGalleryPicture() {
+    this.cameraOn = true;
+
+    const options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.PNG,
       mediaType: this.camera.MediaType.PICTURE
