@@ -5,6 +5,7 @@ import { ClienteDTO } from '../../models/cliente.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
 import { API_CONFIG } from '../../config/api.config';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @IonicPage()
 @Component({
@@ -16,6 +17,8 @@ export class ProfilePage {
   cliente: ClienteDTO;
   picture: string;
   cameraOn: boolean = false;
+  profileImage;
+  randomNumber: number;
 
 
   constructor(
@@ -24,19 +27,23 @@ export class ProfilePage {
     public storage: StorageService,
     public clienteService: ClienteService,
     private camera: Camera,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    public sanitizer: DomSanitizer
   ) {
+    this.profileImage = 'assets/imgs/avatar-blank.png';
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ProfilePage');
+    console.log('ionViewDidLoad ProfilePage');    
     this.loadData();
+    this.randomNumber = Math.random() * 5;    
   }
 
   loadData() {
     let loader = this.presentLoading();
     let localUser = this.storage.getLocalUser();
-    console.log("LOCAL USER: "+localUser.token + " LOCAL EMAIL: "+localUser.email);
+    this.profileImage = this.randomNumber;
+    console.log("LOCAL USER: " + localUser.token + " LOCAL EMAIL: " + localUser.email);
     if (localUser && localUser.email) {
       this.clienteService.findByEmail(localUser.email)
         .subscribe(res => {
@@ -56,12 +63,29 @@ export class ProfilePage {
     }
   }
 
+  // https://gist.github.com/frumbert/3bf7a68ffa2ba59061bdcfc016add9ee
   getImageIfExists() {
+    this.profileImage = Math.random() * 5;
     this.clienteService.getImageFromBucket(this.cliente.id)
       .subscribe(res => {
         this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
+        this.blobToDataURL(res).then(dataURL => {
+          let str: string = dataURL as string;
+          this.profileImage = this.sanitizer.bypassSecurityTrustUrl(str)
+        });
       },
-        error => { });
+        error => {
+          this.profileImage = 'assets/imgs/avatar-blank.png';
+        });
+  }
+
+  blobToDataURL(blob) {
+    return new Promise((fulfill, reject) => {
+      let reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = (e) => fulfill(reader.result);
+      reader.readAsDataURL(blob);
+    })
   }
 
   getCameraPicture() {
@@ -78,7 +102,7 @@ export class ProfilePage {
       this.picture = 'data:image/png;base64,' + imageData;
       this.cameraOn = false;
     }, (err) => {
-      
+      this.cameraOn = false;
     });
   }
 
@@ -97,7 +121,7 @@ export class ProfilePage {
       this.picture = 'data:image/png;base64,' + imageData;
       this.cameraOn = false;
     }, (err) => {
-      
+      this.cameraOn = false;
     });
   }
 
@@ -106,11 +130,11 @@ export class ProfilePage {
     this.clienteService.uploadPicture(this.picture)
       .subscribe(res => {
         this.picture = null;
-        this.loadData();
-        loader.dismiss();        
+        this.getImageIfExists();
+        loader.dismiss();
       },
         error => {
-          loader.dismiss();  
+          loader.dismiss();
         });
   }
 
