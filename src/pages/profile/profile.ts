@@ -43,6 +43,7 @@ export class ProfilePage {
     let loader = this.presentLoading();
     let localUser = this.storage.getLocalUser();
     this.profileImage = this.randomNumber;
+    this.profileImage = 'assets/imgs/avatar-blank.png';
     console.log("LOCAL USER: " + localUser.token + " LOCAL EMAIL: " + localUser.email);
     if (localUser && localUser.email) {
       this.clienteService.findByEmail(localUser.email)
@@ -65,7 +66,8 @@ export class ProfilePage {
 
   // https://gist.github.com/frumbert/3bf7a68ffa2ba59061bdcfc016add9ee
   getImageIfExists() {
-    this.profileImage = Math.random() * 5;
+    this.profileImage = this.randomNumber;
+    this.profileImage = 'assets/imgs/avatar-blank.png';
     this.clienteService.getImageFromBucket(this.cliente.id)
       .subscribe(res => {
         this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;

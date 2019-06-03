@@ -22,7 +22,7 @@
     </ion-item>
     <ion-item *ngIf="total() > 0">
       <h1>Total</h1>
-      <h1 item-end>{{total()}}</h1>
+      <h1 item-end>{{total() | currency}}</h1>
     </ion-item>
     <ion-item *ngIf="total() <= 0">
       <h1>Seu carrinho está vazio</h1>

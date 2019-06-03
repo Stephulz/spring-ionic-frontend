@@ -34,12 +34,16 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
+    let loader = this.presentLoading();
     this.auth.refreshToken()
       .subscribe(res => {
         this.auth.successfulLogin(res.headers.get('Authorization'));
         this.navCtrl.setRoot('CategoriasPage');
+        loader.dismiss();
       },
-        error => { });
+        error => {
+          loader.dismiss();
+        });
   }
 
   login() {
@@ -48,14 +52,14 @@ export class HomePage {
       .subscribe(res => {
         this.auth.successfulLogin(res.headers.get('Authorization'))
         this.navCtrl.setRoot('CategoriasPage');
-        loader.dismiss(); 
+        loader.dismiss();
       },
         error => {
-
+          loader.dismiss();
         });
   }
 
-  signup() {    
+  signup() {
     this.navCtrl.push('SignupPage');
   }
 
